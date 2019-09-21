@@ -4,7 +4,7 @@
 
 Given an array of integers, modify the array such that all even integers occur before the odd integers.
 
-'For all indices i, j isEven(i) ^ !isEven(i) -> i < j'
+`For all indices i, j isEven(i) ^ !isEven(i) -> i < j`
 
 **Partition - Dutch National Flag**
 
