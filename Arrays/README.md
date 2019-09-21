@@ -24,4 +24,7 @@ Let 'digits' be an array that represents an integer. Write a function that adds 
 
 `digits([9]) -> [1, 0]`
 
+## Add-Binary
+
+Given two strings, _bs_ and _bt_ representing binary numbers, write a program to find their sum
 
