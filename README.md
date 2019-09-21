@@ -1,2 +1,5 @@
 # Problem-Solving
-**Arrays**
+
+**About**
+
+Solutions to various computer science problems sorted by categories
