@@ -1,52 +1,76 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Sep 22 17:37:42 2019
+Created on Tue Sep 24 03:35:52 2019
 
 @author: Sudharshan
 """
 
 from collections import Counter
 
-def build_segment_tree(arr):
-    segment_tree = [0] * (4 * len(arr))
-    count = Counter()
+class SegmentTree():
+    def __init__(self, nums):
+        self.lower_bound = 0
+        self.upper_bound = len(nums) - 1
+        self.t = self.__build(nums, 1, 0, len(nums) - 1)
+        
+    def __build(self, nums, idx, tl, tr):
+        t = [0] * len(nums) * 4
+        counter = Counter()
+        def builder(idx, tl, tr):
+            if tl == tr:
+                counter[0] += 1
+                t[idx] = nums[tl]
+            elif tl < tr:
+                counter[0] += 1
+                tm = int((tl + tr) / 2)
+                builder(idx << 1, tl, tm)
+                builder((idx << 1) + 1, tm + 1, tr)
+                t[idx] = t[idx << 1] + t[(idx << 1) + 1]
+        builder(1, tl, tr)
+        return t[:counter[0] + 1]
     
-    def build(idx, l, r):
-        if l == r:
-            count['elements'] += 1
-            segment_tree[idx] = arr[l]
-        elif l < r:
-            count['elements'] += 1
-            segment_tree[idx] = (build(2 * idx, l, int((r + l) / 2))
-                    + build(2 * idx + 1, int((r + l) / 2) + 1, r))
-        return segment_tree[idx]
-    
-    build(1, 0, len(arr) - 1)
-    return segment_tree[:count['elements'] + 1]
+    def sum_query(self, l, r):
+        if l < self.lower_bound or r > self.upper_bound:
+            raise IndexError("The query indices are invalid!")
             
-def sum_query(idx, t, tl, tr, l, r):
-    if l > r:
-        return 0
-    elif tl == l and tr == r:
-        return t[idx]
-    else:
-        tm = int((tl + tr) / 2)
-        return (sum_query(2 * idx, t, tl, tm, l, min(r, tm))
-            + sum_query(2 * idx + 1, t, tm + 1, tr, max(l, tm + 1), r))
+        def sm(idx, tl, tr):
+            if tl > tr:
+                return 0
+            elif tl == l and tr == r:
+                return self.t[idx]
+            tm = int((tl + tr) / 2)
+            if r <= tm:
+                return sm(2 * idx, tl, tm)
+            elif l > tm:
+                return sm(2 * idx + 1, tm + 1, tr)
+            else:
+                return sm(2 * idx, l, tm) + sm(2 * idx + 1, tm + 1, r)
+            
+        return sm(1, 0, self.upper_bound)
+    
+    def update(self, pos, val):
+        if pos < self.lower_bound or pos > self.upper_bound:
+            raise IndexError("Index out of range!")
+            
+        def upd(idx, tl, tr):
+            if tl == tr:
+                self.t[idx] = val
+            else:
+                tm = int((tl + tr) / 2)
+                if pos > tm:
+                    upd(2 * idx + 1, tm + 1, tr)
+                else:
+                    upd(2 * idx, tl, tm)
+                    
+                self.t[idx] = self.t[2 * idx] + self.t[2 * idx + 1]
         
-def query(arr, t, l, r):
-    return sum_query(1, t, 0, len(arr) - 1, l, r)
-
-def update(idx, pos, val, tl, tr, t):
-    if tl == tr:
-        t[idx] = val
-    else:
-        tm = int((tl + tr) / 2)
-        if pos > tm:
-            update(2 * idx + 1, pos, val, tm + 1, tr, t)
-        else:
-            update(2 * idx, pos, val, tl, tm, t)
-        t[idx] = t[2 * idx] + t[2 * idx + 1]
-        
-        
-        
+        upd(1, self.lower_bound, self.upper_bound)
+    
+    def __unicode__(self):
+        return str(self.t)
+    
+    def __repr__(self):
+        return str(self.t)
+    
+    def __str__(self):
+        return str(self.t)
