@@ -8,26 +8,35 @@ Created on Tue Oct 22 17:30:10 2019
 from linked_list import *
 
 def merge_sorted_lists(L1, L2):
-    if not L1:
-        return L2
-    if not L2:
-        return L1
+   
+    dummy_head = tail = ListNode(0)
     
-    if L1.data > L2.data:
-        return merge_sorted_lists(L2, L1)
-    
-    head1, head2 = L1, L2
-    
-    while head1 and head2:
-        if head1.next and head1.next.data > head2.data:
-            temp = head2
-            head2 = head2.next
-            insert_after(head1, temp)
-        elif not head1.next and head1.data < head2.data:
-            insert_after(head1, head2)
+    while L1 and L2:
+        if L1.data < L2.data:
+            tail.next, L1 = L1, L1.next
         else:
-            head1 = head1.next
+            tail.next, L2 = L2, L2.next
+        tail = tail.next
     
-    return L1
+    tail.next = L1 or L2
+    
+    return dummy_head.next
         
+def main():
+    l1, l2 = LinkedList(), LinkedList()
+    l1.add(5)
+    l1.add(6)
+    l1.add(8)
+    l2.add(3)
+    l2.add(4)
+    l2.add(7)
+    l2.add(9)
+    L = merge_sorted_lists(l1.get_head(), l2.get_head())
+    ptr = L
+    while ptr:
+        print(ptr.data, end=' ')
+        ptr = ptr.next
+        
+if __name__ == "__main__":
+    main()
     
