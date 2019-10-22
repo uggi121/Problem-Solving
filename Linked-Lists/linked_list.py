@@ -82,6 +82,19 @@ def delete_after(node):
     if node.next:
         node.next = node.next.next
         
+def print_all(node):
+    """
+    Prints all the values in a sequence of nodes(linked-list).
+    
+    Parameters:
+        node (Listnode): Head of the linked-list.
+    """
+    
+    ptr = node
+    while ptr:
+        print(ptr.data, end=' ')
+        ptr = ptr.next
+        
 class LinkedList:
     """
     Represents a linked list.
@@ -192,6 +205,17 @@ class LinkedList:
             self.num_nodes -= 1
             return True
         return False
+    
+    def add_all(self, collection):
+        """
+        Adds all the values from a collection to the linked-list.
+        
+        Parameters:
+            collection (collection): Collection of items to be added.
+        """
+        
+        for i in collection:
+            self.add(i)
     
     def __str__(self):
         return str(self.head) if self.head else "Empty List"
